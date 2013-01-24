@@ -8,6 +8,7 @@ end
 module Inspectar
 
   def self.attach(params)
+    ActiveRecord::Base.configurations["inspectar"] = params
     Connectar.establish_connection params
     connection_handle = Connectar.connection
   end
@@ -22,7 +23,8 @@ module Inspectar
 
   def self.class_definition(table_data)
     %Q{
-class #{table_data[:model_name]} < Connectar
+class #{table_data[:model_name]} < ActiveRecord::Base
+  establish_connection "inspectar"
   self.table_name = '#{table_data[:table_name]}'
   self.inheritance_column = :_type_disabled
 end
