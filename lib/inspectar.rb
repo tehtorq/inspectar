@@ -1,11 +1,9 @@
 require "active_record"
 require "inspectar/version"
 
-class Connectar < ActiveRecord::Base
-
-end
-
 module Inspectar
+
+  class Connectar < ActiveRecord::Base; end
 
   def self.attach(params)
     ActiveRecord::Base.configurations["inspectar"] = params
@@ -42,9 +40,7 @@ end
   end
 
   def self.fetch
-    conn = Connectar.connection
-    tables = conn.execute("show tables").map { |r| r[0] }
-    tables.map{|table| {table_name: table, model_name: table.tableize.camelize.singularize}}
+    Connectar.connection.tables.map{|table| {table_name: table, model_name: table.tableize.camelize.singularize}}
   end
   
 end
