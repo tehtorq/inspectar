@@ -9,6 +9,7 @@ module Inspectar
     ActiveRecord::Base.configurations["inspectar"] = params
     Connectar.establish_connection params
     connection_handle = Connectar.connection
+    define_classes
   end
 
   def self.tables
