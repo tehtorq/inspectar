@@ -30,11 +30,12 @@ class #{table_data[:model_name]} < ActiveRecord::Base
     hash = {}
 
     self.class.column_names.each do |v|
+      hash[v] = v
       hash[v.downcase] = v
     end
 
-    if hash.has_key?(method_id.to_s.downcase)
-      send hash[method_id.to_s.downcase].to_sym
+    if hash.has_key?(method_id.to_s)
+      send hash[method_id.to_s].to_sym
     else
       super
     end
