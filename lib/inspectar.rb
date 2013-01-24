@@ -25,6 +25,20 @@ class #{table_data[:model_name]} < ActiveRecord::Base
   establish_connection "inspectar"
   self.table_name = '#{table_data[:table_name]}'
   self.inheritance_column = :_type_disabled
+
+  def method_missing(method_id, *args)
+    hash = {}
+
+    self.class.column_names.each do |v|
+      hash[v.downcase] = v
+    end
+
+    if hash.has_key?(method_id.to_s.downcase)
+      send hash[method_id.to_s.downcase].to_sym
+    else
+      super
+    end
+  end
 end
 }
   end
