@@ -1,11 +1,15 @@
 require "active_record"
 require "inspectar/version"
 
+class Connectar < ActiveRecord::Base
+
+end
+
 module Inspectar
 
   def self.attach(params)
-    ActiveRecord::Base.establish_connection params
-    connection_handle = ActiveRecord::Base.connection
+    Connectar.establish_connection params
+    connection_handle = Connectar.connection
   end
 
   def self.tables
@@ -18,7 +22,7 @@ module Inspectar
 
   def self.class_definition(table_data)
     %Q{
-class #{table_data[:model_name]} < ActiveRecord::Base
+class #{table_data[:model_name]} < Connectar
   self.table_name = '#{table_data[:table_name]}'
   self.inheritance_column = :_type_disabled
 end
@@ -36,7 +40,7 @@ end
   end
 
   def self.fetch
-    conn = ActiveRecord::Base.connection
+    conn = Connectar.connection
     tables = conn.execute("show tables").map { |r| r[0] }
     tables.map{|table| {table_name: table, model_name: table.tableize.camelize.singularize}}
   end
