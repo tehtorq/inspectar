@@ -37,6 +37,8 @@ class #{table_data[:model_name]} < ActiveRecord::Base
 
     if hash.has_key?(method_id.to_s)
       send hash[method_id.to_s].to_sym
+    elsif hash.has_key?(method_id.to_s + "=")
+      send (hash[method_id.to_s] + "=").to_sym, args
     else
       super
     end
