@@ -28,17 +28,23 @@ class #{table_data[:model_name]} < ActiveRecord::Base
   self.inheritance_column = :_type_disabled
 
   def method_missing(method_id, *args)
-    hash = {}
+    getters = {}
+    setters = {}
 
     self.class.column_names.each do |v|
-      hash[v] = v
-      hash[v.downcase] = v
+      getters[v] = v
+      getters[v.downcase] = v
     end
 
-    if hash.has_key?(method_id.to_s)
-      send hash[method_id.to_s].to_sym
-    elsif hash.has_key?(method_id.to_s + "=")
-      send (hash[method_id.to_s] + "=").to_sym, args
+    self.class.column_names.each do |v|
+      setters[v+"="] = v
+      setters[v.downcase+"="] = v + "="
+    end
+
+    if getters.has_key?(method_id.to_s)
+      send getters[method_id.to_s].to_sym
+    elsif setters.has_key?(method_id.to_s)
+      send setters[method_id.to_s].to_sym, *args
     else
       super
     end
